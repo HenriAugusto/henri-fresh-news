@@ -21,6 +21,7 @@ def scrap_fresh_news():
             months = item.payload['months']
             search = Search(search_phrase, sections, months, browser)
             search.search()
+            search.set_search_range()
             search.select_sections()
         except Exception as ex:
             print(f"Error caught while processing transaction: {ex}")
