@@ -13,6 +13,8 @@ class Search:
         self.browser = browser
 
     def search(self):
+        """ Searches for the search phrase. No other filters are applied """
+
         print(f"searching for {self.search_phrase}")
         # if it's our first search, we have to click the search button in the land page
         # and only then type into the input element.
@@ -27,6 +29,10 @@ class Search:
         self.browser.click_element("xpath://button[@data-test-id='search-submit']")
 
     def select_sections(self):
+        """ Perform filtering for the desired sections.
+
+            For simplicity, sections that are not found are ignored. """
+
         print(f"Selecting sections {self.sections}")
         if self.sections.count:
             self.browser.click_element("xpath://*[@data-testid='search-multiselect-button']")
