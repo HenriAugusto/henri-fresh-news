@@ -1,4 +1,8 @@
+from datetime import date
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 from RPA.Browser.Selenium import Selenium
+from selenium.webdriver.common.keys import Keys
 
 class Search:
     """ Responsible for all interactions with the NYTimes
@@ -43,3 +47,31 @@ class Search:
                     print(f"Requested section {s} was found.")
                 else:
                     print(f"Requested section {s} was NOT found. Ignoring...")
+
+    def set_search_range(self):
+        """ Set the date filter on the website """
+        start_date, end_date = self.__get_search_range_datetimes()
+        print(start_date)
+        print(end_date)
+        # when inputing the dates as text in the <input> and pressing enter
+        # the dates are considered as exlusive.
+        # For ex: if you type the range 02/01/2023 - 10/01/2023
+        # the website will consider the range 01/01/2023 - 09/01/2023.
+        # For that reason we add one day to each date
+        start_date = start_date + timedelta(days=1)
+        end_date = end_date + timedelta(days=1)
+
+        self.browser.click_element("xpath://button[@data-testid='search-date-dropdown-a']")
+        self.browser.click_element("xpath://button[@aria-label='Specific Dates']")
+        self.browser.input_text("id:startDate", start_date.strftime('%m/%d/%Y'))
+        self.browser.input_text("id:endDate", end_date.strftime('%m/%d/%Y'))
+        self.browser.press_keys(None, Keys.ENTER)
+
+    def __get_search_range_datetimes(self):
+        """ Gets both the start and end date according to be used with the search """
+        end_date = date.today()
+        months_to_subtract = max(1, self.months) # index is 1-based and 0 is to be treated as 1
+        delta = relativedelta(months=months_to_subtract-1)
+        start_date = end_date-delta
+        start_date = start_date.replace(day=1)
+        return start_date, end_date
