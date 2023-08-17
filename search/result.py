@@ -77,10 +77,10 @@ class Result:
         self.search_phrases_in_title_and_description = haystack.count(needle)
 
     def __str__(self):
-        print(f"self.title: {self.title}")
-        print(f"self.date: {self.date}")
-        print(f"self.description: {self.description}")
-        print(f"self.img_url: {self.img_url}")
-        print(f"self.img_file_name: {self.img_file_name}")
-        print(f"self.contains_monetary_values: {self.contains_monetary_values}")
-        print(f"self.search_phrases_in_title_and_description: {self.search_phrases_in_title_and_description}")
+        print(f"title: {self.title}")
+        print(f"date: {self.date}")
+        print(f"description: {self.description}")
+        print(f"img url: {self.img_url}")
+        print(f"img file name: {self.img_file_name}")
+        print(f"contains monetary values: {self.contains_monetary_values}")
+        print(f"# of search phrases in result: {self.search_phrases_in_title_and_description}")
