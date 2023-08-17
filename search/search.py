@@ -84,8 +84,11 @@ class Search:
         print(f"Number of results found {len(results)} (DELETE_THIS) we should be reading that from the HTML")
 
         for r in results:
-            result = Result(self.browser, r, self.search_phrase)
-            print("---News result scrapped successfull---")
-            print(result)
+            try:
+                result = Result(self.browser, r, self.search_phrase)
+                print("---News result scrapped successfull---")
+                print(result)
+            except Exception as ex:
+                print(f"Error caught while scraping result: {ex}")
 
         print("finished processing result")
