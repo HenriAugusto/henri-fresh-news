@@ -91,4 +91,4 @@ class Search:
             except Exception as ex:
                 print(f"Error caught while scraping result: {ex}")
 
-        print("finished processing result")
+        print("finished processing all results")
