@@ -52,8 +52,8 @@ class Search:
     def set_search_range(self):
         """ Set the date filter on the website """
         start_date, end_date = self.__get_search_range_datetimes()
-        print(start_date)
-        print(end_date)
+        print(f"Start date: {start_date}")
+        print(f"End date: {end_date}")
         # when inputing the dates as text in the <input> and pressing enter
         # the dates are considered as exlusive.
         # For ex: if you type the range 02/01/2023 - 10/01/2023
