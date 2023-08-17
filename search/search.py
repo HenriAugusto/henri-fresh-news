@@ -35,7 +35,8 @@ class Search:
     def select_sections(self):
         """ Perform filtering for the desired sections.
 
-            For simplicity, sections that are not found are ignored. """
+            For simplicity, sections that are not found are ignored.
+        """
 
         print(f"Selecting sections {self.sections}")
         if self.sections.count:
