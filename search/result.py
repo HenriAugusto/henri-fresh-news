@@ -37,6 +37,7 @@ class Result:
             self.description = description_element.text
         else:
             self.description = None
+            print("Result does NOT have description")
 
     def __process_image(self):
         img_element_query = self.browser.find_elements("xpath:.//figure//img", self.element)
