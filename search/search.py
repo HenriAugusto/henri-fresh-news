@@ -3,6 +3,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from RPA.Browser.Selenium import Selenium
 from selenium.webdriver.common.keys import Keys
+from search.result import Result
 
 class Search:
     """ Responsible for all interactions with the NYTimes
@@ -76,3 +77,15 @@ class Search:
         start_date = end_date-delta
         start_date = start_date.replace(day=1)
         return start_date, end_date
+
+    def process_results(self):
+        results_locator = "xpath://ol[@data-testid='search-results']/li[@data-testid='search-bodega-result']"
+        results = self.browser.find_elements(results_locator)
+        print(f"Number of results found {len(results)} (DELETE_THIS) we should be reading that from the HTML")
+
+        for r in results:
+            result = Result(self.browser, r, self.search_phrase)
+            print("---News result scrapped successfull---")
+            print(result)
+
+        print("finished processing result")
