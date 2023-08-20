@@ -3,6 +3,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from RPA.Browser.Selenium import Selenium
 from selenium.webdriver.common.keys import Keys
+from search.result import Result
 
 class Search:
     """ Responsible for all interactions with the NYTimes
@@ -35,7 +36,8 @@ class Search:
     def select_sections(self):
         """ Perform filtering for the desired sections.
 
-            For simplicity, sections that are not found are ignored. """
+            For simplicity, sections that are not found are ignored.
+        """
 
         print(f"Selecting sections {self.sections}")
         if self.sections.count:
@@ -51,8 +53,8 @@ class Search:
     def set_search_range(self):
         """ Set the date filter on the website """
         start_date, end_date = self.__get_search_range_datetimes()
-        print(start_date)
-        print(end_date)
+        print(f"Start date: {start_date}")
+        print(f"End date: {end_date}")
         # when inputing the dates as text in the <input> and pressing enter
         # the dates are considered as exlusive.
         # For ex: if you type the range 02/01/2023 - 10/01/2023
@@ -75,3 +77,18 @@ class Search:
         start_date = end_date-delta
         start_date = start_date.replace(day=1)
         return start_date, end_date
+
+    def process_results(self):
+        results_locator = "xpath://ol[@data-testid='search-results']/li[@data-testid='search-bodega-result']"
+        results = self.browser.find_elements(results_locator)
+        print(f"Number of results found {len(results)} (DELETE_THIS) we should be reading that from the HTML")
+
+        for r in results:
+            try:
+                result = Result(self.browser, r, self.search_phrase)
+                print("---News result scrapped successfull---")
+                print(result)
+            except Exception as ex:
+                print(f"Error caught while scraping result: {ex}")
+
+        print("finished processing all results")
