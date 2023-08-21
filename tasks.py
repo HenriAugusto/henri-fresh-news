@@ -5,12 +5,14 @@ from RPA.Browser.Selenium import Selenium
 # Our classes
 from search.search import Search
 from browsing.browser_initializer import BrowserInitializer
+from data.data import DataManager
 
 @task
 def scrap_fresh_news():
     browser = Selenium()
     browser_initializer = BrowserInitializer(browser)
     browser_initializer.initialize_browser()
+    data_manager = DataManager("output.csv")
 
     for item in workitems.inputs:
         try:
@@ -19,7 +21,7 @@ def scrap_fresh_news():
             search_phrase = item.payload['search_phrase']
             sections = item.payload['sections']
             months = item.payload['months']
-            search = Search(search_phrase, sections, months, browser)
+            search = Search(search_phrase, sections, months, browser, data_manager)
             search.search()
             search.set_search_range()
             search.select_sections()
