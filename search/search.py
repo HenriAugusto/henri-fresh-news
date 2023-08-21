@@ -4,12 +4,15 @@ from dateutil.relativedelta import relativedelta
 from RPA.Browser.Selenium import Selenium
 from selenium.webdriver.common.keys import Keys
 from search.result import Result
+import re
 
 class Search:
     """ Responsible for all interactions with the NYTimes
         website related to searching phrases and it's related activities
         such as setting section filters, loading more search results, etc
     """
+
+    search_form_status_locator = "xpath://p[@data-testid='SearchForm-status']"
 
     def __init__(self, search_phrase: str, sections: list[str], months: int, browser: Selenium):
         self.search_phrase = search_phrase
@@ -32,6 +35,9 @@ class Search:
             self.browser.input_text("xpath://*[@id='searchTextField']", self.search_phrase)
 
         self.browser.click_element("xpath://button[@data-test-id='search-submit']")
+        self.__wait_for_results_to_load()
+        self.__get_total_number_of_results()
+        print(f"Number of results found {self.total_results}")
 
     def select_sections(self):
         """ Perform filtering for the desired sections.
@@ -78,17 +84,64 @@ class Search:
         start_date = start_date.replace(day=1)
         return start_date, end_date
 
-    def process_results(self):
-        results_locator = "xpath://ol[@data-testid='search-results']/li[@data-testid='search-bodega-result']"
-        results = self.browser.find_elements(results_locator)
-        print(f"Number of results found {len(results)} (DELETE_THIS) we should be reading that from the HTML")
+    def __show_more(self) -> bool:
+        """ Tries to click the "Shows more" button.
 
-        for r in results:
-            try:
-                result = Result(self.browser, r, self.search_phrase)
-                print("---News result scrapped successfull---")
-                print(result)
-            except Exception as ex:
-                print(f"Error caught while scraping result: {ex}")
+            Returns true if it there were more results to load.
+        """
+        show_more_btn_locator = "xpath://button[@data-testid='search-show-more-button']"
+        show_more_btn_query = self.browser.find_elements(show_more_btn_locator)
+        if show_more_btn_query:
+            results_before = len(self.__get_results())
+            self.browser.click_button(show_more_btn_locator)
+            while len(self.__get_results()) == results_before:
+                pass
+
+        return bool(show_more_btn_query)
+
+    def __get_results(self):
+        results_locator = "xpath://ol[@data-testid='search-results']/li[@data-testid='search-bodega-result']"
+        return self.browser.find_elements(results_locator)
+
+    def process_results(self):
+        result_last_index = 0
+
+        while self.__show_more():
+            results = self.__get_results()
+            for i in range(result_last_index, len(results)):
+                print(f"\n\n---PARSING RESULT: {i}")
+                r = results[i]
+                try:
+                    result = Result(self.browser, r, self.search_phrase)
+                    print("---News result scrapped successfull---")
+                    print(result)
+                except Exception as ex:
+                    print(f"Error caught while scraping result: {ex}")
+                result_last_index += 1
 
         print("finished processing all results")
+
+    def __wait_for_results_to_load(self):
+        """ Wait news results to load after typing into the search bar and submitting
+
+            NOT intended to use when clicking "Show more"
+        """
+        # You might have to throttle your web browser to see this element
+        # displaying "Loading..."
+        self.browser.wait_until_element_does_not_contain(
+            Search.search_form_status_locator,
+            "Loading"
+        )
+
+    def __get_total_number_of_results(self):
+        search_status_text: str = self.browser.get_text(Search.search_form_status_locator)
+        number_match = re.search("(\d|\,|\.)+", search_status_text)
+        # In our experience, the website might show the thousands separator as
+        # an comma or period, depending on the browser, so we remove both before parsing
+        if number_match:
+            match_str = number_match.group().replace(",", "").replace(".", "")
+            self.total_results = int(match_str)
+        else:
+            raise Exception(
+                f"Error while getting total number of results. Could not get value from string: {search_status_text}"
+            )

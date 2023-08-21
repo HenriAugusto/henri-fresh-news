@@ -23,6 +23,8 @@ def scrap_fresh_news():
             search.search()
             search.set_search_range()
             search.select_sections()
+            search.process_results()
+            print("TRANSACTION PROCESSED SUCCESSFULLY")
         except Exception as ex:
             print(f"Error caught while processing transaction: {ex}")
             browser_initializer.kill_browser()
