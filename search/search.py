@@ -94,9 +94,11 @@ class Search:
         if show_more_btn_query:
             results_before = len(self.__get_results())
             self.browser.click_button(show_more_btn_locator)
-            while len(self.__get_results()) == results_before:
-                pass
-
+            self.browser.wait_until_page_does_not_contain_element(
+                show_more_btn_locator,
+                timeout = timedelta(seconds=10),
+                limit=results_before
+            )
         return bool(show_more_btn_query)
 
     def __get_results(self):
