@@ -78,9 +78,9 @@ class Result:
 
     def __str__(self):
         return (f"title: {self.title}\n"
-                 "date: {self.date}\n"
-                 "description: {self.description}\n"
-                 "img url: {self.img_url}\n"
-                 "img file name: {self.img_file_name}\n"
-                 "contains monetary values: {self.contains_monetary_values}\n"
-                 "# of search phrases in result: {self.search_phrases_in_title_and_description}")
+                f"date: {self.date}\n"
+                f"description: {self.description}\n"
+                f"img url: {self.img_url}\n"
+                f"img file name: {self.img_file_name}\n"
+                f"contains monetary values: {self.contains_monetary_values}\n"
+                f"# of search phrases in result: {self.search_phrases_in_title_and_description}")
