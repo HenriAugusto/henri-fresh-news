@@ -115,13 +115,12 @@ class Search:
                 r = results[i]
                 try:
                     result = Result(self.browser, r, self.search_phrase)
-                    print("---News result scrapped successfull---")
                     print(result)
                 except Exception as ex:
                     print(f"Error caught while scraping result: {ex}")
                 result_last_index += 1
 
-        print("finished processing all results")
+        print("finished processing all results for transaction")
 
     def __wait_for_results_to_load(self):
         """ Wait news results to load after typing into the search bar and submitting
