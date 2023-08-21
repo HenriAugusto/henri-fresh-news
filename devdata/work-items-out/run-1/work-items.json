@@ -1,8 +1,8 @@
 [
     {
         "payload": {
-            "search_phrase": "Stravinsky",
-            "sections": ["Arts", "Movies", "Theater"],
+            "search_phrase": "Igor Stravinsky",
+            "sections": ["Theater"],
             "months": 0
         },
         "files": {}
