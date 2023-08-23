@@ -136,6 +136,7 @@ class Search:
                     print(result)
                     if not self.data_manager.check_if_result_was_already_processed(result):
                         self.data_manager.write_result(result)
+                        result.download_image()
                     else:
                         print(f"Result {result.title} was already processed")
                 except Exception as ex:

@@ -19,7 +19,7 @@ class Result:
         self.__scrap_title()
         self.__scrap_date()
         self.__scrap_description()
-        self.__process_image()
+        self.__scrap_image_url_and_name()
         self.__check_if_contains_monetary_values()
         self.__count_search_phrases_in_title_and_description()
 
@@ -48,26 +48,31 @@ class Result:
             self.description = None
             print("Result does NOT have description")
 
-    def __process_image(self):
+    def __scrap_image_url_and_name(self):
         img_element_query = self.browser.find_elements("xpath:.//figure//img", self.element)
         if img_element_query:
             self.img_url = img_element_query[0].get_attribute("src")
             a = urlparse(self.img_url)
             self.img_file_name = os.path.basename(a.path)
-            self.__download_image()
         else:
             self.img_url = None
             self.img_file_name = None
             print("Result does NOT have an image")
 
-    def __download_image(self):
-        response = requests.get(self.img_url, stream=True)
-        response.raise_for_status()
-        self.img_path = os.path.join(Result.img_download_dir, self.img_file_name)
-        with open(self.img_path, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
-        print(f"image successfully downloaded at {self.img_path}")
+    def download_image(self) -> bool:
+        """ If the news have an image, downloads it.
+
+            Returns if an image was downloaded
+        """
+        if self.img_url is not None:
+            response = requests.get(self.img_url, stream=True)
+            response.raise_for_status()
+            self.img_path = os.path.join(Result.img_download_dir, self.img_file_name)
+            with open(self.img_path, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            print(f"image successfully downloaded at {self.img_path}")
+        return self.img_url is not None
 
     def __check_if_contains_monetary_values(self):
         # Possible formats: $11.1 | $111,111.11 | 11 dollars | 11 USD
