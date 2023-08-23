@@ -64,6 +64,7 @@ class Search:
                     print(f"Requested section {s} was found.")
                 else:
                     print(f"Requested section {s} was NOT found. Ignoring...")
+        self.__wait_for_results_to_load()
 
     def set_search_range(self):
         """ Set the date filter on the website """
