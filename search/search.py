@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from search.result import Result
 from data.data import DataManager
 import re
+from datetime import datetime
 
 class Search:
     """ Responsible for all interactions with the NYTimes
@@ -102,11 +103,19 @@ class Search:
         if show_more_btn_query:
             results_before = len(self.__get_results())
             self.browser.click_button(show_more_btn_locator)
-            self.browser.wait_until_page_does_not_contain_element(
-                show_more_btn_locator,
-                timeout = timedelta(seconds=10),
-                limit=results_before
-            )
+            # we tried a more "selenium-ish" implementation but as of now
+            # wait_until_page_does_not_contain_element() is not working properly
+            # with the limit argument
+            # self.browser.wait_until_page_does_not_contain_element(
+            #     show_more_btn_locator,
+            #     timeout = timedelta(seconds=1000),
+            #     limit=results_before
+            # )
+            max_wait_time = timedelta(seconds=20)
+            start_time = datetime.now()
+            while len(self.__get_results()) == results_before:
+                if datetime.now()-start_time > max_wait_time:
+                    raise TimeoutError("Timeout while waiting more results to load after clicking 'Show more'")
         return bool(show_more_btn_query)
 
     def __get_results(self):
