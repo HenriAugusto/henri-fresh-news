@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from search.result import Result
 
 class DataManager:
@@ -28,7 +29,7 @@ class DataManager:
     def __result_to_row(self, result: Result):
             return [
                 result.title,
-                result.date,
+                result.date.strftime('%Y-%m-%d'),
                 result.description,
                 result.img_url,
                 result.img_file_name,
@@ -39,7 +40,7 @@ class DataManager:
     def check_if_result_was_already_processed(self, result):
         for r in self.results:
             title = r[0]
-            date = r[1]
+            date = datetime.strptime(r[1], '%Y-%m-%d')
             if title == result.title and date == result.date:
                 return True
         return False
