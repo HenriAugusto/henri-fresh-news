@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from RPA.Browser.Selenium import Selenium
 from selenium.webdriver.common.keys import Keys
 from search.result import Result
+from data.data import DataManager
 import re
 
 class Search:
@@ -14,11 +15,18 @@ class Search:
 
     search_form_status_locator = "xpath://p[@data-testid='SearchForm-status']"
 
-    def __init__(self, search_phrase: str, sections: list[str], months: int, browser: Selenium):
+    def __init__(
+            self,
+            search_phrase: str,
+            sections: list[str],
+            months: int,
+            browser: Selenium,
+            data_manager: DataManager):
         self.search_phrase = search_phrase
         self.sections = sections
         self.months = months
         self.browser = browser
+        self.data_manager = data_manager
 
     def search(self):
         """ Searches for the search phrase. No other filters are applied """
@@ -116,6 +124,10 @@ class Search:
                 try:
                     result = Result(self.browser, r, self.search_phrase)
                     print(result)
+                    if not self.data_manager.check_if_result_was_already_processed(result):
+                        self.data_manager.write_result(result)
+                    else:
+                        print(f"Result {result.title} was already processed")
                 except Exception as ex:
                     print(f"Error caught while scraping result: {ex}")
                 result_last_index += 1
