@@ -148,8 +148,20 @@ class Search:
 
             NOT intended to use when clicking "Show more"
         """
-        # You might have to throttle your web browser to see this element
-        # displaying "Loading..."
+        # When results are loading, there is an element that displays "Loading"
+        # You might have to throttle your web browser to see this happening.
+        # We first try to detect the "Loading" message, but we ignore if it
+        # wasn't found because the results may load before the check,
+        # (the "Loading" message already appeared and disappeared.)
+        # In that case waitingfor the element to NOT contain "Loading" will work
+        try:
+            self.browser.wait_until_element_contains(
+                Search.search_form_status_locator,
+                "Loading",
+                timeout=timedelta(seconds=10)
+            )
+        except Exception as ex:
+            pass
         self.browser.wait_until_element_does_not_contain(
             Search.search_form_status_locator,
             "Loading"
