@@ -1,4 +1,5 @@
 import csv
+import os
 from datetime import datetime
 from search.result import Result
 
@@ -46,8 +47,11 @@ class DataManager:
 
     def __load_results(self):
         self.results = []
-        with open(self.file_path, newline="") as csvfile:
-            reader = csv.reader(csvfile, delimiter=",", quotechar="\"")
-            for row in reader:
-                self.results.append(row)
-        print(f"results loaded from file {self.file_path}")
+        if os.path.exists(self.file_path):
+            with open(self.file_path, newline="") as csvfile:
+                reader = csv.reader(csvfile, delimiter=",", quotechar="\"")
+                for row in reader:
+                    self.results.append(row)
+            print(f"results loaded from file {self.file_path}")
+        else:
+            print(f"file {self.file_path} was not found while loading results.")
