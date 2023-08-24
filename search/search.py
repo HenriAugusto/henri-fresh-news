@@ -29,7 +29,7 @@ class Search:
         self.browser = browser
         self.data_manager = data_manager
 
-    def search(self):
+    def search(self) -> None:
         """ Searches for the search phrase. No other filters are applied """
 
         print(f"searching for {self.search_phrase}")
@@ -48,12 +48,11 @@ class Search:
         self.__get_total_number_of_results()
         print(f"Number of results found {self.total_results}")
 
-    def select_sections(self):
+    def select_sections(self) -> None:
         """ Perform filtering for the desired sections.
 
             For simplicity, sections that are not found are ignored.
         """
-
         print(f"Selecting sections {self.sections}")
         if self.sections.count:
             self.browser.click_element("xpath://*[@data-testid='search-multiselect-button']")
@@ -66,7 +65,7 @@ class Search:
                     print(f"Requested section {s} was NOT found. Ignoring...")
         self.__wait_for_results_to_load()
 
-    def set_search_range(self):
+    def set_search_range(self) -> None:
         """ Set the date filter on the website """
         start_date, end_date = self.__get_search_range_datetimes()
         print(f"Start date: {start_date}")
@@ -128,6 +127,7 @@ class Search:
 
         while self.__show_more():
             results = self.__get_results()
+            print(f"len(results): {len(results)}")
             for i in range(result_last_index, len(results)):
                 print(f"\n\n---PARSING RESULT: {i}")
                 r = results[i]

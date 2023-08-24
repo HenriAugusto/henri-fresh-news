@@ -31,13 +31,12 @@ class Result:
         link_element = self.browser.find_element("xpath:.//a/h4/..", self.element)
         link_url = link_element.get_attribute("href")
         # real-world ex as reference:
-        # /1951/09/02/archives/igor-stravinsky-conducts.html?searchResultPosition=6
+        # www.nytimes.com/1951/09/02/archives/igor-stravinsky-conducts.html?searchResultPosition=6
         date_matches = re.search(r"/(\d{4})/(\d{2})/(\d{2})/", link_url)
         y = int(date_matches.group(1))
         m = int(date_matches.group(2))
         d = int(date_matches.group(3))
         self.date = datetime(year=y, month=m, day=d)
-
 
     def __scrap_description(self):
         description_query = self.browser.find_elements("xpath:.//h4/../p", self.element)
