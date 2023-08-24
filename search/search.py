@@ -60,7 +60,7 @@ class Search:
                 section_selector = f"xpath://text()[normalize-space()='{s}']/../../input"
                 if self.browser.does_page_contain_element(section_selector):
                     self.browser.click_element(section_selector)
-                    print(f"Requested section {s} was found.")
+                    print(f"Requested section {s} was found and selected.")
                 else:
                     print(f"Requested section {s} was NOT found. Ignoring...")
         self.__wait_for_results_to_load()
@@ -68,8 +68,7 @@ class Search:
     def set_search_range(self) -> None:
         """ Set the date filter on the website """
         start_date, end_date = self.__get_search_range_datetimes()
-        print(f"Start date: {start_date}")
-        print(f"End date: {end_date}")
+        print(f"Setting search range: {start_date}-{end_date}")
         # when inputing the dates as text in the <input> and pressing enter
         # the dates are considered as exlusive.
         # For ex: if you type the range 02/01/2023 - 10/01/2023
@@ -89,9 +88,8 @@ class Search:
 
         while self.__show_more():
             results = self.__get_results()
-            print(f"len(results): {len(results)}")
             for i in range(result_last_index, len(results)):
-                print(f"\n\n---PARSING RESULT: {i}")
+                print(f"\n\n---PARSING NEWS RESULT: {i}")
                 r = results[i]
                 try:
                     result = Result(self.browser, r, self.search_phrase)

@@ -16,23 +16,25 @@ def scrap_fresh_news():
 
     for item in workitems.inputs:
         try:
-            print("Processing Work Item")
-            print(item.payload)
+            print(f"Processing Work Item:\n{item.payload}")
+
             search_phrase = item.payload['search_phrase']
             sections = item.payload['sections']
             months = item.payload['months']
+
             search = Search(search_phrase, sections, months, browser, data_manager)
             search.search()
             search.set_search_range()
             search.select_sections()
             search.process_results()
-            print("TRANSACTION PROCESSED SUCCESSFULLY")
+
+            print("Transaction processed successfully")
         except Exception as ex:
             print(f"Error caught while processing transaction: {ex}")
             browser_initializer.kill_browser()
             browser_initializer.initialize_browser()
 
-    print("End process")
+    print("End of the process")
 
 
 if __name__ == "__main__":
