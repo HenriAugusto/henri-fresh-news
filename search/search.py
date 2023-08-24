@@ -84,6 +84,29 @@ class Search:
         self.browser.input_text("id:endDate", end_date.strftime('%m/%d/%Y'))
         self.browser.press_keys(None, Keys.ENTER)
 
+    def process_results(self):
+        result_last_index = 0
+
+        while self.__show_more():
+            results = self.__get_results()
+            print(f"len(results): {len(results)}")
+            for i in range(result_last_index, len(results)):
+                print(f"\n\n---PARSING RESULT: {i}")
+                r = results[i]
+                try:
+                    result = Result(self.browser, r, self.search_phrase)
+                    print(result)
+                    if not self.data_manager.check_if_result_was_already_processed(result):
+                        self.data_manager.write_result(result)
+                        result.download_image()
+                    else:
+                        print(f"Result {result.title} was already processed")
+                except Exception as ex:
+                    print(f"Error caught while scraping result: {ex}")
+                result_last_index += 1
+
+        print("finished processing all results for transaction")
+
     def __get_search_range_datetimes(self):
         """ Gets both the start and end date according to be used with the search """
         end_date = date.today()
@@ -121,29 +144,6 @@ class Search:
     def __get_results(self):
         results_locator = "xpath://ol[@data-testid='search-results']/li[@data-testid='search-bodega-result']"
         return self.browser.find_elements(results_locator)
-
-    def process_results(self):
-        result_last_index = 0
-
-        while self.__show_more():
-            results = self.__get_results()
-            print(f"len(results): {len(results)}")
-            for i in range(result_last_index, len(results)):
-                print(f"\n\n---PARSING RESULT: {i}")
-                r = results[i]
-                try:
-                    result = Result(self.browser, r, self.search_phrase)
-                    print(result)
-                    if not self.data_manager.check_if_result_was_already_processed(result):
-                        self.data_manager.write_result(result)
-                        result.download_image()
-                    else:
-                        print(f"Result {result.title} was already processed")
-                except Exception as ex:
-                    print(f"Error caught while scraping result: {ex}")
-                result_last_index += 1
-
-        print("finished processing all results for transaction")
 
     def __wait_for_results_to_load(self):
         """ Wait news results to load after typing into the search bar and submitting

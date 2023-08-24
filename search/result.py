@@ -23,6 +23,21 @@ class Result:
         self.__check_if_contains_monetary_values()
         self.__count_search_phrases_in_title_and_description()
 
+    def download_image(self) -> bool:
+        """ If the news have an image, downloads it.
+
+            Returns if an image was downloaded
+        """
+        if self.img_url is not None:
+            response = requests.get(self.img_url, stream=True)
+            response.raise_for_status()
+            self.img_path = os.path.join(Result.img_download_dir, self.img_file_name)
+            with open(self.img_path, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            print(f"image successfully downloaded at {self.img_path}")
+        return self.img_url is not None
+
     def __scrap_title(self):
         title_element = self.browser.find_element("xpath:.//h4", self.element)
         self.title = title_element.text
@@ -57,21 +72,6 @@ class Result:
             self.img_url = None
             self.img_file_name = None
             print("Result does NOT have an image")
-
-    def download_image(self) -> bool:
-        """ If the news have an image, downloads it.
-
-            Returns if an image was downloaded
-        """
-        if self.img_url is not None:
-            response = requests.get(self.img_url, stream=True)
-            response.raise_for_status()
-            self.img_path = os.path.join(Result.img_download_dir, self.img_file_name)
-            with open(self.img_path, 'wb') as file:
-                for chunk in response.iter_content(chunk_size=8192):
-                    file.write(chunk)
-            print(f"image successfully downloaded at {self.img_path}")
-        return self.img_url is not None
 
     def __check_if_contains_monetary_values(self):
         # Possible formats: $11.1 | $111,111.11 | 11 dollars | 11 USD
