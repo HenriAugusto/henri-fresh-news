@@ -12,7 +12,7 @@ def scrap_fresh_news():
     browser = Selenium()
     browser_initializer = BrowserInitializer(browser)
     browser_initializer.initialize_browser()
-    data_manager = DataManager("output.csv")
+    data_manager = DataManager("scrapped-news.csv")
 
     for item in workitems.inputs:
         try:
