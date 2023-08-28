@@ -7,6 +7,7 @@ from search.result import Result
 from data.data import DataManager
 import re
 from datetime import datetime
+from logger.logger import Log
 
 class Search:
     """ Responsible for all interactions with the NYTimes
@@ -32,7 +33,7 @@ class Search:
     def search(self) -> None:
         """ Searches for the search phrase. No other filters are applied """
 
-        print(f"searching for {self.search_phrase}")
+        Log.info(f"searching for {self.search_phrase}")
         # if it's our first search, we have to click the search button in the land page
         # and only then type into the input element.
         # Otherwise we have a different input to type into which is always visible.
@@ -46,29 +47,29 @@ class Search:
         self.browser.click_element("xpath://button[@data-test-id='search-submit']")
         self.__wait_for_results_to_load()
         self.__get_total_number_of_results()
-        print(f"Number of results found {self.total_results}")
+        Log.info(f"Number of results found {self.total_results}")
 
     def select_sections(self) -> None:
         """ Perform filtering for the desired sections.
 
             For simplicity, sections that are not found are ignored.
         """
-        print(f"Selecting sections {self.sections}")
+        Log.info(f"Selecting sections {self.sections}")
         if self.sections.count:
             self.browser.click_element("xpath://*[@data-testid='search-multiselect-button']")
             for s in self.sections:
                 section_selector = f"xpath://text()[normalize-space()='{s}']/../../input"
                 if self.browser.does_page_contain_element(section_selector):
                     self.browser.click_element(section_selector)
-                    print(f"Requested section {s} was found and selected.")
+                    Log.info(f"Requested section {s} was found and selected.")
                 else:
-                    print(f"Requested section {s} was NOT found. Ignoring...")
+                    Log.info(f"Requested section {s} was NOT found. Ignoring...")
         self.__wait_for_results_to_load()
 
     def set_search_range(self) -> None:
         """ Set the date filter on the website """
         start_date, end_date = self.__get_search_range_datetimes()
-        print(f"Setting search range: {start_date}-{end_date}")
+        Log.info(f"Setting search range: {start_date}-{end_date}")
         # when inputing the dates as text in the <input> and pressing enter
         # the dates are considered as exlusive.
         # For ex: if you type the range 02/01/2023 - 10/01/2023
@@ -89,21 +90,21 @@ class Search:
         while self.__show_more():
             results = self.__get_results()
             for i in range(result_last_index, len(results)):
-                print(f"\n\n---PARSING NEWS RESULT: {i}")
+                Log.info(f"\n\n---PARSING NEWS RESULT: {i}")
                 r = results[i]
                 try:
                     result = Result(self.browser, r, self.search_phrase)
-                    print(result)
+                    Log.info(result)
                     if not self.data_manager.check_if_result_was_already_processed(result):
                         self.data_manager.write_result(result)
                         result.download_image()
                     else:
-                        print(f"Result {result.title} was already processed")
+                        Log.info(f"Result {result.title} was already processed")
                 except Exception as ex:
-                    print(f"Error caught while scraping result: {ex}")
+                    Log.info(f"Error caught while scraping result: {ex}")
                 result_last_index += 1
 
-        print("finished processing all results for transaction")
+        Log.info("finished processing all results for transaction")
 
     def __get_search_range_datetimes(self):
         """ Gets both the start and end date according to be used with the search """

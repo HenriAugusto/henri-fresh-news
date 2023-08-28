@@ -5,6 +5,7 @@ import os
 import re
 import requests
 from datetime import datetime
+from logger.logger import Log
 
 class Result:
     """ Represents a single news result. Contains all the logic to extract and process the result data """
@@ -35,7 +36,7 @@ class Result:
             with open(self.img_path, 'wb') as file:
                 for chunk in response.iter_content(chunk_size=8192):
                     file.write(chunk)
-            print(f"image successfully downloaded at {self.img_path}")
+            Log.info(f"image successfully downloaded at {self.img_path}")
         return self.img_url is not None
 
     def __scrap_title(self):
@@ -60,7 +61,7 @@ class Result:
             self.description = description_element.text
         else:
             self.description = None
-            print("Result does NOT have description")
+            Log.info("Result does NOT have description")
 
     def __scrap_image_url_and_name(self):
         img_element_query = self.browser.find_elements("xpath:.//figure//img", self.element)
@@ -71,7 +72,7 @@ class Result:
         else:
             self.img_url = None
             self.img_file_name = None
-            print("Result does NOT have an image")
+            Log.info("Result does NOT have an image")
 
     def __check_if_contains_monetary_values(self):
         # Possible formats: $11.1 | $111,111.11 | 11 dollars | 11 USD
