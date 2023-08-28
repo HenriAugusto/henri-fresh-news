@@ -1,4 +1,5 @@
 from RPA.Browser.Selenium import Selenium
+from logger.logger import Log
 
 class BrowserInitializer:
     """ Contains methods to initialize the browser state needed for processing transactions
@@ -28,9 +29,9 @@ class BrowserInitializer:
         # always appear but we check it just in case
         if self.browser.does_page_contain_element(self.accept_cookies_btn_locator):
             self.browser.click_element(self.accept_cookies_btn_locator)
-            print("accepting cookies")
+            Log.info("accepting cookies")
         else:
-            print("no need to accept cookies")
+            Log.info("no need to accept cookies")
 
     def kill_browser(self) -> None:
         """ Closes the browser """

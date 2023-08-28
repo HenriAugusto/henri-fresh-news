@@ -2,6 +2,7 @@ import csv
 import os
 from datetime import datetime
 from search.result import Result
+from logger.logger import Log
 
 class DataManager:
     """ Encapsulates logic related to persitence of data.
@@ -52,6 +53,6 @@ class DataManager:
                 reader = csv.reader(csvfile, delimiter=",", quotechar="\"")
                 for row in reader:
                     self.results.append(row)
-            print(f"results loaded from file {self.file_path}")
+            Log.info(f"results loaded from file {self.file_path}")
         else:
-            print(f"file {self.file_path} was not found while loading results.")
+            Log.info(f"file {self.file_path} was not found while loading results.")
