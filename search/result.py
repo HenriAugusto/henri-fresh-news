@@ -10,7 +10,7 @@ from logger.logger import Log
 class Result:
     """ Represents a single news result. Contains all the logic to extract and process the result data """
 
-    img_download_dir = "output"
+    img_download_dir = os.path.join("output", "images")
 
     def __init__(self, browser: Selenium, element: WebElement, search_phrase: str):
         """ The constructor conveniently does all the scraping at initialization """
