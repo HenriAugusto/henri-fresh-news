@@ -69,7 +69,7 @@ class Search:
     def set_search_range(self) -> None:
         """ Set the date filter on the website """
         start_date, end_date = self.__get_search_range_datetimes()
-        Log.info(f"Setting search range: {start_date}-{end_date}")
+        Log.info(f"Setting search range: {start_date}  ->  {end_date}")
         # when inputing the dates as text in the <input> and pressing enter
         # the dates are considered as exlusive.
         # For ex: if you type the range 02/01/2023 - 10/01/2023
@@ -127,12 +127,15 @@ class Search:
             self.browser.click_button(show_more_btn_locator)
             # we tried a more "selenium-ish" implementation but as of now
             # wait_until_page_does_not_contain_element() is not working properly
-            # with the limit argument
+            # with the `limit` argument.
+            # Last tested with rpaframework 26.1.0 (released at: 2023-08-24T14:40:17)
+            #
             # self.browser.wait_until_page_does_not_contain_element(
             #     show_more_btn_locator,
             #     timeout = timedelta(seconds=1000),
             #     limit=results_before
             # )
+            #
             max_wait_time = timedelta(seconds=20)
             start_time = datetime.now()
             while len(self.__get_results()) == results_before:
