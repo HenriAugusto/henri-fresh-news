@@ -18,7 +18,7 @@
     {
         "payload": {
             "search_phrase": "Darius Milhaud",
-            "sections": ["Music"],
+            "sections": ["Music", "New York"],
             "months": 0
         },
         "files": {}
