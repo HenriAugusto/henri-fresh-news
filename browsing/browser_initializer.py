@@ -16,7 +16,7 @@ class BrowserInitializer:
 
     def initialize_browser(self) -> None:
         """ Opens the browser and leaves it in the state needed for processing transactions """
-        self.browser.open_browser(self.NYTIMES_URL)
+        self.browser.open_browser(self.NYTIMES_URL, "chrome")
         self.browser.set_selenium_implicit_wait(5)
         self.browser.maximize_browser_window()
 
