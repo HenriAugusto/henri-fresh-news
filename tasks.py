@@ -8,6 +8,8 @@ from browsing.browser_initializer import BrowserInitializer
 from data.data import DataManager
 from logger.logger import Log
 
+# Please read the README.md file regarding testing the robot
+
 @task
 def scrap_fresh_news():
     browser = Selenium()
