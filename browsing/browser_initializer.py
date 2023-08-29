@@ -1,5 +1,6 @@
 from RPA.Browser.Selenium import Selenium
 from logger.logger import Log
+from datetime import timedelta
 
 class BrowserInitializer:
     """ Contains methods to initialize the browser state needed for processing transactions
@@ -28,8 +29,11 @@ class BrowserInitializer:
         # The "do you want some cookies, sweetheart?" stuff should
         # always appear but we check it just in case
         if self.browser.does_page_contain_element(self.accept_cookies_btn_locator):
-            self.browser.click_element(self.accept_cookies_btn_locator)
             Log.info("accepting cookies")
+            self.browser.click_element(self.accept_cookies_btn_locator)
+            # If you interact too quickly with the page after clicking this button
+            # the whole cookies bar might not close so we have to check if it's gone
+            self.browser.wait_until_page_does_not_contain(self.accept_cookies_btn_locator, timedelta(seconds=3))
         else:
             Log.info("no need to accept cookies")
 
