@@ -1,22 +1,28 @@
-# Template: Python - Minimal
+# Henri Augusto - Fresh-News Challenge
 
-This template leverages the new Python open-source structure [robo](https://github.com/robocorp/robo), the [libraries](https://github.com/robocorp/robo#libraries) from to same project as well.
-The full power of [rpaframework](https://github.com/robocorp/rpaframework) is also available for you on Python as a backup while we implement new Python libraries.
+This is [Henri Augusto's](https://github.com/HenriAugusto) submission for the [Thoughtful Automation's fresh-news challenge](https://thoughtfulautomation.notion.site/RPA-Challenge-Fresh-news-fa3f504bb7824e1aa9c083906ca1bba7).
 
-The template provides you with the basic structure of a Python project: logging out of the box and controlling your tasks without fiddling with the base Python stuff. The environment contains the most used libraries, so you do not have to start thinking about those right away. 
+# How to test in VS Code
 
-👉 After running the bot, check out the `log.html` under the `output` -folder.
+Open the command palette and run `Robocorp: Debug Robot`. It should give you the following options:
 
-The template here is essentially empty, leaving you with a canvas to paint on.
+    1. <No Work item as input>
+    2. run-1 - Output
 
-Do note that with Robocorp tooling you:
-- Do NOT need Python installed
-- Should NOT be writing `pip install..`; the [conda.yaml](https://github.com/robocorp/template-python/blob/master/conda.yaml) is here for a reason.
-- You do not need to worry about Python's main -functions and, most importantly, the logging setup
+Choose the second option so it runs with the preconfigured test itens. (`devdata\work-items-out\run-1\work-items.json`)
 
-🚀 Now, go get'em
+# Developer Remarks
 
-For more information, do not forget to check out the following:
-* [Robocorp Documentation -site](https://robocorp.com/docs)
-* [Portal for more examples](https://robocorp.com/portal)
-* [robo repo](https://github.com/robocorp/robo) as this will developed a lot...
+## Error Recovery
+
+All results in the CSV file are written and loaded by the `DataManager` class.
+Our main task checks for every results if it was previously written to the file before writing, i.e. ignores any result processed in previous executions
+
+## Logging
+
+A `Log` class is provided which acts as an interface. Changing, removing or adding logging strategies can be done without changing the client code.
+
+## Locators convention
+
+- Locators that are only used in one place are defined in the function they're used.
+- Locators used more than one place are defined as class variables.

@@ -1,0 +1,26 @@
+[
+    {
+        "payload": {
+            "search_phrase": "Igor Stravinsky",
+            "sections": ["Theater"],
+            "months": 2
+        },
+        "files": {}
+    },
+    {
+        "payload": {
+            "search_phrase": "Claude Debussy",
+            "sections": ["Movies"],
+            "months": 0
+        },
+        "files": {}
+    },
+    {
+        "payload": {
+            "search_phrase": "Darius Milhaud",
+            "sections": ["Music", "New York"],
+            "months": 0
+        },
+        "files": {}
+    }
+]
