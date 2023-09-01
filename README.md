@@ -38,15 +38,16 @@ but not on
 - Cloud Workers
 - Cloud Workers (early access)
 
-because in those 2 the following error appears:
+Cecause in those 2 the following error appears while interacting with the search button:
 
 ```
 element not interactable
 ```
 
+
 Further investigation is required.
 
-I've already tried adding `python-chromedriver-binary=114.0.5735.16.0` to `conda.yaml` with no success.
+I've already tried adding `python-chromedriver-binary=114.0.5735.16.0` to `conda.yaml` in hope it's a versioning issue but with no success.
 
 # How to test in VS Code
 
