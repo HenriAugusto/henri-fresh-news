@@ -16,7 +16,7 @@ def scrap_fresh_news():
     Log.initialize()
     browser_initializer = BrowserInitializer(browser)
     browser_initializer.initialize_browser()
-    data_manager = DataManager("scrapped-news.csv")
+    data_manager = DataManager("output/scrapped-news.csv")
 
     for item in workitems.inputs:
         try:
