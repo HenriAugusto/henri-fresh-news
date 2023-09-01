@@ -2,18 +2,51 @@
 
 This is [Henri Augusto's](https://github.com/HenriAugusto) submission for the [Thoughtful Automation's fresh-news challenge](https://thoughtfulautomation.notion.site/RPA-Challenge-Fresh-news-fa3f504bb7824e1aa9c083906ca1bba7).
 
-# Running in Robocloud
+# Running with Robocloud's Cloud Workers
 
-I've managed to run the code from tthe Robocloud successfully in two different machines using Self-hosted workers. Yet all of the Cloudworkers are getting errors while trying to call Selenium's `open_browser`.
+This sections descibres aspects that different when executing the robot in Robocloud's Cloud Workers vs Self-Hosted Workers/Locally.
+
+At first I've had success running the robot i a couple of Self-Hosted workers but couldn't manage to run the robot in any Cloud Worker.
+
+I would get errors such as:
 
 ```
-Exception: WebDriverException
-Message: unknown error: Chrome failed to start: crashed.
-  (unknown error: DevToolsActivePort file doesn't exist)
-  (The process started from chrome location /home/worker/.cache/selenium/chrome/linux64/116.0.5845.96/chrome is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
-  ```
+Message: unknown error: Chrome failed to start: exited abnormally.
+2023-08-31 19:34:08:    (unknown error: DevToolsActivePort file doesn't exist)
+2023-08-31 19:34:08:    (The process started from chrome location /home/worker/.cache/selenium/chrome/linux64/116.0.5845.96/chrome is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+```
 
-  You can try to run the robot in a self-hosted machine  or through VS code (see next section for VS Code)
+I've pinpointed the error to `RPA.Browser.Selenium`'s `open_browser()` method.
+
+After a lot of trial and error, experimenting with different parameters for `open_browser()` and also different chromedriver versions in `conda.yaml`, I've managed to get the robot running in the Cloud Workers by exchanging `open_browser()` for `open_chrome_browser()` in `BrowserInitializer`.
+
+Aftwerwards i've start receiving errors like this:
+
+```
+'utf-8' codec can't decode byte 0x92 in position 292: invalid start byte
+```
+
+Which were solved by specifying which encoding to use when reading and writing to the CSV in the `DataManager` class. The offending characters were and U+2018 (‘) and U+2019 (’)
+
+This  robot would run sucessfully on
+
+- Cloud Workers (Preview)
+- Cloud Workers (Ubuntu 18.04 Legacy)
+
+but not on
+
+- Cloud Workers
+- Cloud Workers (early access)
+
+because in those 2 the following error appears:
+
+```
+element not interactable
+```
+
+Further investigation is required.
+
+I've already tried adding `python-chromedriver-binary=114.0.5735.16.0` to `conda.yaml` with no success.
 
 # How to test in VS Code
 
