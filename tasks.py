@@ -8,13 +8,15 @@ from browsing.browser_initializer import BrowserInitializer
 from data.data import DataManager
 from logger.logger import Log
 
+# Please read the README.md file regarding testing the robot
+
 @task
 def scrap_fresh_news():
     browser = Selenium()
     Log.initialize()
     browser_initializer = BrowserInitializer(browser)
     browser_initializer.initialize_browser()
-    data_manager = DataManager("scrapped-news.csv")
+    data_manager = DataManager("output/scrapped-news.csv")
 
     for item in workitems.inputs:
         try:

@@ -1,6 +1,14 @@
 [
     {
         "payload": {
+            "search_phrase": "Xenakis",
+            "sections": ["Books"],
+            "months": 3
+        },
+        "files": {}
+    },
+    {
+        "payload": {
             "search_phrase": "Igor Stravinsky",
             "sections": ["Theater"],
             "months": 2
