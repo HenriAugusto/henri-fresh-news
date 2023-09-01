@@ -15,6 +15,7 @@ environmentConfigs:
 
 ignoreFiles:
   - .gitignore
+  - scrapped-news.csv
 artifactsDir: output
 PATH:
   - .

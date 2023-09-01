@@ -20,7 +20,7 @@ class DataManager:
 
     def write_result(self, result: Result) -> None:
         """ Writes a single row (Result) to the file """
-        with open(self.file_path, 'a', newline='') as file:
+        with open(self.file_path, 'a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(self.__result_to_row(result))
 
@@ -49,7 +49,7 @@ class DataManager:
     def __load_results(self):
         self.results = []
         if os.path.exists(self.file_path):
-            with open(self.file_path, newline="") as csvfile:
+            with open(self.file_path, newline="", encoding="utf-8") as csvfile:
                 reader = csv.reader(csvfile, delimiter=",", quotechar="\"")
                 for row in reader:
                     self.results.append(row)
