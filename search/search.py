@@ -54,6 +54,9 @@ class Search:
 
             For simplicity, sections that are not found are ignored.
         """
+        # We do need to unselect anything because we're always searching in the upper-left corner toolbar.
+        # If instead we were to search again with the bigger and screen-centered toolbar we would need to search
+        # unselect sections from previous searches
         Log.info(f"Selecting sections {self.sections}")
         if self.sections.count:
             self.browser.click_element("xpath://*[@data-testid='search-multiselect-button']")
